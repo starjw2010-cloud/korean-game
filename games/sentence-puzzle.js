@@ -18,10 +18,10 @@ function loadSentencePuzzle(container, level) {
       const checkEl  = document.getElementById('sp-check');
       answerEl.innerHTML = selected.length === 0
         ? '<span style="color:#aaa;font-size:0.9rem;">Tap words below to build the sentence</span>'
-        : selected.map((w, i) =>
+        : selected.map((item, i) =>
             `<span class="sp-token selected" onclick="spDeselect(${i})"
               style="display:inline-block;background:#1d3557;color:white;padding:8px 14px;border-radius:8px;margin:4px;cursor:pointer;font-weight:600;"
-            >${w}</span>`
+            >${escHtml(item.word)}</span>`
           ).join('');
       checkEl.disabled = selected.length !== puzzle.words.length;
     }
@@ -45,7 +45,7 @@ function loadSentencePuzzle(container, level) {
       <!-- 단어 블록 -->
       <div id="sp-pool" style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:20px;">
         ${shuffledWords.map((w, i) =>
-          `<button class="sp-word" id="sp-word-${i}" onclick="spSelect('${escHtml(w)}', ${i})"
+          `<button class="sp-word" id="sp-word-${i}" data-word="${escHtml(w)}" data-idx="${i}"
             style="padding:10px 18px;background:white;border:2px solid #457b9d;border-radius:10px;font-size:1rem;font-weight:600;color:#1d3557;cursor:pointer;transition:all 0.15s;"
           >${w}</button>`
         ).join('')}
@@ -58,27 +58,27 @@ function loadSentencePuzzle(container, level) {
       <div id="sp-feedback" style="margin-top:14px;text-align:center;font-size:1rem;font-weight:700;"></div>
     `;
 
+    container.querySelectorAll('.sp-word').forEach(b =>
+      b.addEventListener('click', () => window.spSelect(b.dataset.word, parseInt(b.dataset.idx)))
+    );
+
     window.spSelect = function(word, idx) {
       const btn = document.getElementById(`sp-word-${idx}`);
       if (!btn || btn.disabled) return;
-      selected.push(word);
+      selected.push({ word, idx });
       btn.disabled = true;
       btn.style.opacity = '0.3';
       updateDisplay();
     };
 
     window.spDeselect = function(selIdx) {
-      const word = selected[selIdx];
+      const { word, idx } = selected[selIdx];
       selected.splice(selIdx, 1);
-      // 단어 블록 다시 활성화
-      const pool = document.getElementById('sp-pool');
-      if (pool) {
-        pool.querySelectorAll('.sp-word').forEach(btn => {
-          if (btn.textContent === word && btn.disabled) {
-            btn.disabled = false;
-            btn.style.opacity = '1';
-          }
-        });
+      // 단어 블록 다시 활성화 (원래 인덱스로 정확히 찾기)
+      const btn = document.getElementById(`sp-word-${idx}`);
+      if (btn) {
+        btn.disabled = false;
+        btn.style.opacity = '1';
       }
       updateDisplay();
     };
@@ -94,7 +94,7 @@ function loadSentencePuzzle(container, level) {
 
     window.spCheck = function() {
       const correct = puzzle.correct_order.map(i => puzzle.words[i]);
-      const isCorrect = selected.every((w, i) => w === correct[i]);
+      const isCorrect = selected.every((item, i) => item.word === correct[i]);
       const fb = document.getElementById('sp-feedback');
       if (isCorrect) {
         fb.textContent = '✅ Correct!';
