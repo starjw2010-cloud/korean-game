@@ -96,6 +96,3 @@ function loadOxQuiz(container, level) {
   render();
 }
 
-
-  render();
-}
