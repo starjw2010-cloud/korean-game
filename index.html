@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Korean Learning Arcade | 한국어 오락실</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- ===== 광고 공간: 상단 배너 ===== -->
+  <div class="ad-banner ad-top">
+    <span class="ad-label">Advertisement</span>
+    <!-- 나중에 여기에 Google AdSense 코드를 붙여넣으세요 -->
+  </div>
+
+  <!-- ===== 헤더 ===== -->
+  <header class="site-header">
+    <div class="header-inner">
+      <div class="logo">
+        <span class="logo-kr">한국어</span>
+        <span class="logo-en">Learning Arcade</span>
+      </div>
+      <div class="score-board">
+        <div class="score-item">
+          <span class="score-icon">★</span>
+          <span class="score-label">Total Score</span>
+          <span class="score-value" id="total-score">0</span>
+        </div>
+        <div class="score-item">
+          <span class="score-icon">📚</span>
+          <span class="score-label">Games Played</span>
+          <span class="score-value" id="games-played">0</span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- ===== 메인 콘텐츠 ===== -->
+  <main class="main-content">
+
+    <!-- 환영 메시지 -->
+    <section class="welcome-section">
+      <h1 class="welcome-title">Welcome to Korean Learning Arcade!</h1>
+      <p class="welcome-sub">7 fun mini-games to master Korean. Pick your level and start playing!</p>
+    </section>
+
+    <!-- 난이도 선택 -->
+    <section class="difficulty-section">
+      <h2 class="section-title">Select Difficulty</h2>
+      <div class="difficulty-buttons">
+        <button class="diff-btn active" data-level="beginner">
+          <span class="diff-icon">🌱</span>
+          <span class="diff-name">Beginner</span>
+          <span class="diff-desc">Basic greetings & numbers</span>
+        </button>
+        <button class="diff-btn" data-level="intermediate">
+          <span class="diff-icon">🌿</span>
+          <span class="diff-name">Intermediate</span>
+          <span class="diff-desc">Travel, food & K-pop</span>
+        </button>
+        <button class="diff-btn" data-level="advanced">
+          <span class="diff-icon">🌳</span>
+          <span class="diff-name">Advanced</span>
+          <span class="diff-desc">Grammar & expressions</span>
+        </button>
+      </div>
+    </section>
+
+    <!-- 게임 선택 카드들 -->
+    <section class="games-section">
+      <h2 class="section-title">Choose a Game</h2>
+      <div class="games-grid">
+
+        <!-- 게임 1: 단어 카드 뒤집기 -->
+        <div class="game-card" data-game="word-cards">
+          <div class="game-card-inner">
+            <div class="game-emoji">🃏</div>
+            <h3 class="game-name">Word Flip Cards</h3>
+            <p class="game-name-kr">단어 카드 뒤집기</p>
+            <p class="game-desc">Flip the card to reveal Korean words and guess their meaning!</p>
+            <div class="game-meta">
+              <span class="game-tag">Memory</span>
+              <span class="game-tag">Vocabulary</span>
+            </div>
+            <div class="game-best">Best: <span class="best-score" id="best-word-cards">--</span></div>
+            <button class="play-btn" onclick="startGame('word-cards')">PLAY</button>
+          </div>
+        </div>
+
+        <!-- 게임 2: 빈칸 채우기 -->
+        <div class="game-card" data-game="fill-blank">
+          <div class="game-card-inner">
+            <div class="game-emoji">✏️</div>
+            <h3 class="game-name">Fill in the Blank</h3>
+            <p class="game-name-kr">빈칸 채우기</p>
+            <p class="game-desc">Complete the Korean sentence by choosing the right word!</p>
+            <div class="game-meta">
+              <span class="game-tag">Sentences</span>
+              <span class="game-tag">Vocabulary</span>
+            </div>
+            <div class="game-best">Best: <span class="best-score" id="best-fill-blank">--</span></div>
+            <button class="play-btn" onclick="startGame('fill-blank')">PLAY</button>
+          </div>
+        </div>
+
+        <!-- 게임 3: 발음 퀴즈 -->
+        <div class="game-card" data-game="pronunciation">
+          <div class="game-card-inner">
+            <div class="game-emoji">🔤</div>
+            <h3 class="game-name">Pronunciation Quiz</h3>
+            <p class="game-name-kr">발음 퀴즈</p>
+            <p class="game-desc">Match Korean characters to their correct romanized pronunciation!</p>
+            <div class="game-meta">
+              <span class="game-tag">Reading</span>
+              <span class="game-tag">Pronunciation</span>
+            </div>
+            <div class="game-best">Best: <span class="best-score" id="best-pronunciation">--</span></div>
+            <button class="play-btn" onclick="startGame('pronunciation')">PLAY</button>
+          </div>
+        </div>
+
+        <!-- 게임 4: 단어 비 내리기 -->
+        <div class="game-card" data-game="word-rain">
+          <div class="game-card-inner">
+            <div class="game-emoji">🌧️</div>
+            <h3 class="game-name">Word Rain</h3>
+            <p class="game-name-kr">단어 비 내리기</p>
+            <p class="game-desc">Type the meaning before Korean words hit the ground!</p>
+            <div class="game-meta">
+              <span class="game-tag">Typing</span>
+              <span class="game-tag">Speed</span>
+            </div>
+            <div class="game-best">Best: <span class="best-score" id="best-word-rain">--</span></div>
+            <button class="play-btn" onclick="startGame('word-rain')">PLAY</button>
+          </div>
+        </div>
+
+        <!-- 게임 5: 문장 퍼즐 -->
+        <div class="game-card" data-game="sentence-puzzle">
+          <div class="game-card-inner">
+            <div class="game-emoji">🧩</div>
+            <h3 class="game-name">Sentence Puzzle</h3>
+            <p class="game-name-kr">문장 퍼즐</p>
+            <p class="game-desc">Drag and arrange word blocks to build correct Korean sentences!</p>
+            <div class="game-meta">
+              <span class="game-tag">Grammar</span>
+              <span class="game-tag">Word Order</span>
+            </div>
+            <div class="game-best">Best: <span class="best-score" id="best-sentence-puzzle">--</span></div>
+            <button class="play-btn" onclick="startGame('sentence-puzzle')">PLAY</button>
+          </div>
+        </div>
+
+        <!-- 게임 6: 짝꿍 찾기 -->
+        <div class="game-card" data-game="matching">
+          <div class="game-card-inner">
+            <div class="game-emoji">🔗</div>
+            <h3 class="game-name">Matching Game</h3>
+            <p class="game-name-kr">짝꿍 찾기</p>
+            <p class="game-desc">Connect Korean words with their English meanings or images!</p>
+            <div class="game-meta">
+              <span class="game-tag">Memory</span>
+              <span class="game-tag">Pairs</span>
+            </div>
+            <div class="game-best">Best: <span class="best-score" id="best-matching">--</span></div>
+            <button class="play-btn" onclick="startGame('matching')">PLAY</button>
+          </div>
+        </div>
+
+        <!-- 게임 7: OX 퀴즈 -->
+        <div class="game-card" data-game="ox-quiz">
+          <div class="game-card-inner">
+            <div class="game-emoji">❓</div>
+            <h3 class="game-name">OX Quiz</h3>
+            <p class="game-name-kr">OX 퀴즈</p>
+            <p class="game-desc">True or False? Test your knowledge of Korean culture and grammar!</p>
+            <div class="game-meta">
+              <span class="game-tag">Culture</span>
+              <span class="game-tag">Grammar</span>
+            </div>
+            <div class="game-best">Best: <span class="best-score" id="best-ox-quiz">--</span></div>
+            <button class="play-btn" onclick="startGame('ox-quiz')">PLAY</button>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- 진행상황 리셋 버튼 -->
+    <section class="reset-section">
+      <button class="reset-btn" onclick="confirmReset()">Reset All Progress</button>
+    </section>
+
+  </main>
+
+  <!-- ===== 게임 화면 (처음에는 숨겨져 있음) ===== -->
+  <div class="game-screen" id="game-screen" style="display:none;">
+    <div class="game-screen-header">
+      <button class="back-btn" onclick="goHome()">← Back to Home</button>
+      <div class="current-level-badge" id="current-level-badge">Beginner</div>
+    </div>
+    <div class="game-container" id="game-container">
+      <!-- 각 게임 내용이 여기에 동적으로 들어옵니다 -->
+    </div>
+  </div>
+
+  <!-- ===== 광고 공간: 하단 배너 ===== -->
+  <div class="ad-banner ad-bottom">
+    <span class="ad-label">Advertisement</span>
+    <!-- 나중에 여기에 Google AdSense 코드를 붙여넣으세요 -->
+  </div>
+
+  <!-- ===== 스크립트 ===== -->
+  <script src="utils.js"></script>
+  <script src="storage.js"></script>
+  <script src="data.js"></script>
+  <script src="games/word-cards.js"></script>
+  <script src="games/fill-blank.js"></script>
+  <script src="games/pronunciation.js"></script>
+  <script src="games/word-rain.js"></script>
+  <script src="games/sentence-puzzle.js"></script>
+  <script src="games/matching.js"></script>
+  <script src="games/ox-quiz.js"></script>
+  <script src="main.js"></script>
+</body>
+</html>
