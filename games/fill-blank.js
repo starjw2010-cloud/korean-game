@@ -27,9 +27,12 @@ function loadFillBlank(container, level) {
         </div>
       </div>
       <div class="choices-grid">
-        ${shuffledOpts.map(opt => `<button class="choice-btn" onclick="fbAnswer(this, '${escHtml(opt)}', '${escHtml(q.answer)}')">${escHtml(opt)}</button>`).join('')}
+        ${shuffledOpts.map(opt => `<button class="choice-btn" data-chosen="${escHtml(opt)}" data-correct="${escHtml(q.answer)}">${escHtml(opt)}</button>`).join('')}
       </div>
     `;
+    container.querySelectorAll('.choice-btn').forEach(b =>
+      b.addEventListener('click', () => window.fbAnswer(b, b.dataset.chosen, b.dataset.correct))
+    );
   }
 
   window.fbAnswer = function(btn, chosen, correct) {
