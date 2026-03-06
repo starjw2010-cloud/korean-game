@@ -5,6 +5,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Korean Learning Arcade | 한국어 오락실</title>
   <link rel="stylesheet" href="style.css" />
+  <link rel="manifest" href="manifest.json" />
+  <meta name="theme-color" content="#1d3557" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="한국어 게임" />
 </head>
 <body>
 
@@ -223,5 +228,10 @@
   <script src="games/matching.js"></script>
   <script src="games/ox-quiz.js"></script>
   <script src="main.js"></script>
+  <script>
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('/korean-game/sw.js');
+    }
+  </script>
 </body>
 </html>
