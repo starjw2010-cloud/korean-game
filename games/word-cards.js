@@ -26,9 +26,12 @@ function loadWordCards(container, level) {
         <div style="font-size:1rem;color:#aaa;margin-top:8px;">${word.romanization}</div>
       </div>
       <div class="choices-grid">
-        ${options.map(opt => `<button class="choice-btn" onclick="wcAnswer(this, '${escHtml(opt)}', '${escHtml(word.en)}')">${escHtml(opt)}</button>`).join('')}
+        ${options.map(opt => `<button class="choice-btn" data-chosen="${escHtml(opt)}" data-correct="${escHtml(word.en)}">${escHtml(opt)}</button>`).join('')}
       </div>
     `;
+    container.querySelectorAll('.choice-btn').forEach(b =>
+      b.addEventListener('click', () => window.wcAnswer(b, b.dataset.chosen, b.dataset.correct))
+    );
   }
 
   window.wcAnswer = function(btn, chosen, correct) {

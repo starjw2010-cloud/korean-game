@@ -78,7 +78,6 @@ function loadOxQuiz(container, level) {
 
   function showResult() {
     const isNew = onGameEnd('ox-quiz', score);
-    const pct = Math.round((score / (questions.length * 10)) * 100);
     container.innerHTML = `
       <div class="result-screen fade-in">
         <div class="result-emoji">${score >= 70 ? '🎓' : score >= 40 ? '👍' : '📚'}</div>
