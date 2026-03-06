@@ -26,9 +26,12 @@ function loadPronunciation(container, level) {
         <div style="font-size:0.9rem;color:#aaa;margin-top:8px;">Meaning: ${word.en}</div>
       </div>
       <div class="choices-grid">
-        ${options.map(opt => `<button class="choice-btn" style="font-family:monospace;font-size:0.95rem;" onclick="prAnswer(this, '${escHtml(opt)}', '${escHtml(word.romanization)}')">${escHtml(opt)}</button>`).join('')}
+        ${options.map(opt => `<button class="choice-btn" style="font-family:monospace;font-size:0.95rem;" data-chosen="${escHtml(opt)}" data-correct="${escHtml(word.romanization)}">${escHtml(opt)}</button>`).join('')}
       </div>
     `;
+    container.querySelectorAll('.choice-btn').forEach(b =>
+      b.addEventListener('click', () => window.prAnswer(b, b.dataset.chosen, b.dataset.correct))
+    );
   }
 
   window.prAnswer = function(btn, chosen, correct) {
