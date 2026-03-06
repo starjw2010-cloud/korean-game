@@ -3,89 +3,71 @@
    ============================================= */
 
 function loadKoreanTyping(container, level) {
-  const words = shuffle([...GameData.words[level]]).slice(0, 10);
-  let score = 0, current = 0, correct = 0;
+  const allWords = GameData.words[level];
+  const words = shuffle([...allWords]).slice(0, 15);
+  let current = 0, score = 0, correct = 0;
 
   function render() {
     if (current >= words.length) return showResult();
     const word = words[current];
-
     container.innerHTML = `
-      <h2 class="game-title">⌨️ Korean Typing</h2>
-      <div class="game-score-bar">
-        <div class="stat"><span class="stat-label">Score</span><span class="stat-value" id="kt-score">${score}</span></div>
-        <div class="stat"><span class="stat-label">Word</span><span class="stat-value">${current + 1} / ${words.length}</span></div>
-        <div class="stat"><span class="stat-label">Correct</span><span class="stat-value" id="kt-correct">${correct}</span></div>
-      </div>
-      <div class="fade-in" style="background:white;border-radius:20px;padding:36px 24px;text-align:center;box-shadow:0 4px 20px rgba(0,0,0,0.12);margin-bottom:20px;">
-        <p style="font-size:0.85rem;color:#888;margin-bottom:10px;">Type the Korean word for:</p>
-        <div style="font-size:2rem;font-weight:800;color:#1d3557;margin-bottom:10px;">${escHtml(word.en)}</div>
-        <div style="background:#f0f4f8;border-radius:8px;padding:8px 16px;display:inline-block;">
-          <span style="font-size:0.85rem;color:#457b9d;">💡 Hint: starts with <b>${word.kr[0]}</b> · romanization: <b>${word.romanization}</b></span>
+      <div style="text-align:center; padding:20px;">
+        <div style="margin-bottom:8px; color:#888; font-size:14px;">
+          ${current + 1} / ${words.length} &nbsp;|&nbsp; Score: <b>${score}</b>
         </div>
-      </div>
-      <div style="display:flex;gap:10px;margin-bottom:10px;">
-        <input id="kt-input" type="text" placeholder="한글 또는 romanization 입력..." autocomplete="off" autocorrect="off"
-          style="flex:1;padding:14px 18px;font-size:1.1rem;border:2px solid #dee2e6;border-radius:10px;outline:none;font-family:inherit;" />
-        <button id="kt-check-btn" style="padding:14px 22px;background:#1d3557;color:white;border:none;border-radius:10px;font-weight:700;font-size:1rem;cursor:pointer;">Check</button>
-      </div>
-      <button id="kt-skip-btn" style="display:block;margin:0 auto;background:transparent;border:none;color:#aaa;font-size:0.85rem;cursor:pointer;text-decoration:underline;">Skip</button>
-      <div id="kt-feedback" style="text-align:center;font-size:1rem;font-weight:700;min-height:28px;margin-top:14px;"></div>
-    `;
+        <div style="font-size:14px; color:#555; margin-bottom:6px;">Type the Korean word for:</div>
+        <div style="font-size:36px; font-weight:bold; margin-bottom:8px; color:#1a3a5c;">${word.english}</div>
+        <div style="font-size:14px; color:#888; margin-bottom:20px;">
+          Hint: starts with <b>${word.korean[0]}</b> (${word.romanization.split(' ')[0]})
+        </div>
+        <input id="typing-input" type="text" placeholder="Type in Korean or romanization..."
+          style="width:280px; padding:12px; font-size:18px; border:2px solid #ddd; border-radius:8px; text-align:center; outline:none;"
+          autofocus />
+        <br/><br/>
+        <button id="submit-btn" style="padding:12px 32px; background:#e63946; color:#fff; border:none; border-radius:8px; font-size:16px; cursor:pointer;">
+          Submit
+        </button>
+        <div id="feedback" style="margin-top:16px; font-size:18px; min-height:28px;"></div>
+      </div>`;
 
-    const input = document.getElementById('kt-input');
-    input.focus();
+    const input = container.querySelector('#typing-input');
+    const btn = container.querySelector('#submit-btn');
 
-    function submit() {
-      const val = input.value.trim();
+    function check() {
+      const val = input.value.trim().toLowerCase();
+      const fb = container.querySelector('#feedback');
       if (!val) return;
-      input.disabled = true;
-      document.getElementById('kt-check-btn').disabled = true;
-      document.getElementById('kt-skip-btn').disabled = true;
-      const isCorrect = val === word.kr || val.toLowerCase() === word.romanization.toLowerCase();
-      const fb = document.getElementById('kt-feedback');
+      const isCorrect = val === word.korean ||
+        val === word.romanization.toLowerCase() ||
+        word.romanization.toLowerCase().startsWith(val) && val.length >= 3;
       if (isCorrect) {
-        input.style.borderColor = '#52b788';
-        score += 15; correct++;
-        document.getElementById('kt-score').textContent = score;
-        document.getElementById('kt-correct').textContent = correct;
-        fb.textContent = '✅ Correct! +15'; fb.style.color = '#52b788';
+        score += 10; correct++;
+        fb.innerHTML = `<span style="color:green">✅ 정답! ${word.korean} (${word.romanization})</span>`;
       } else {
-        input.style.borderColor = '#e63946';
-        fb.innerHTML = `❌ Answer: <b>${word.kr}</b> (${word.romanization})`; fb.style.color = '#e63946';
+        fb.innerHTML = `<span style="color:red">❌ 오답! 정답: ${word.korean} (${word.romanization})</span>`;
       }
-      setTimeout(() => { current++; render(); }, 1800);
-    }
-
-    function skip() {
       input.disabled = true;
-      document.getElementById('kt-check-btn').disabled = true;
-      document.getElementById('kt-skip-btn').disabled = true;
-      const fb = document.getElementById('kt-feedback');
-      fb.innerHTML = `⏭️ Answer: <b>${word.kr}</b> (${word.romanization})`; fb.style.color = '#888';
-      setTimeout(() => { current++; render(); }, 1800);
+      btn.disabled = true;
+      setTimeout(() => { current++; render(); }, 1200);
     }
 
-    input.addEventListener('keydown', e => { if (e.key === 'Enter') submit(); });
-    document.getElementById('kt-check-btn').addEventListener('click', submit);
-    document.getElementById('kt-skip-btn').addEventListener('click', skip);
+    btn.addEventListener('click', check);
+    input.addEventListener('keydown', e => { if (e.key === 'Enter') check(); });
   }
 
   function showResult() {
-    const isNew = onGameEnd('korean-typing', score);
     container.innerHTML = `
-      <div class="result-screen fade-in">
-        <div class="result-emoji">${correct >= 8 ? '⌨️' : correct >= 5 ? '👍' : '📚'}</div>
-        <h2 class="result-title">${correct >= 8 ? 'Typing Master!' : correct >= 5 ? 'Good job!' : 'Keep practicing!'}</h2>
-        ${isNew ? '<p style="color:#f4a261;font-weight:700;font-size:1.1rem;">🏆 New Best Score!</p>' : ''}
-        <div class="result-score">${score} pts</div>
-        <p style="color:#888;">${correct} out of ${words.length} correct!</p>
-        <div class="result-buttons">
-          <button class="btn-primary" onclick="loadKoreanTyping(document.getElementById('game-container'), currentLevel)">Play Again</button>
-          <button class="btn-secondary" onclick="goHome()">Home</button>
-        </div>
-      </div>
-    `;
+      <div style="text-align:center; padding:40px 20px;">
+        <div style="font-size:48px;">⌨️</div>
+        <h2>게임 종료!</h2>
+        <p style="font-size:22px;">Score: <b>${score}</b></p>
+        <p style="color:#555;">${correct} / ${words.length} correct</p>
+        <button onclick="startGame('korean-typing')"
+          style="margin-top:16px; padding:12px 32px; background:#e63946; color:#fff; border:none; border-radius:8px; font-size:16px; cursor:pointer;">
+          Play Again
+        </button>
+      </div>`;
+    if (typeof saveScore === 'function') saveScore('korean-typing', score);
   }
 
   render();
