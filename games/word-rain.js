@@ -15,11 +15,12 @@ function loadWordRain(container, level) {
   const wordPool = shuffle([...GameData.words[level]]);
   let score = 0;
   let lives = 3;
-  let speed = 0.4;          // 초당 px 이동 (점점 빨라짐)
-  let spawnInterval = 2800; // ms마다 새 단어 생성
+  let speed = 0.4;
+  let spawnInterval = 2800;
   let activeWords = [];
   let poolIndex = 0;
   let gameOver = false;
+  let streak = 0;
 
   container.innerHTML = `
     <h2 class="game-title">🌧️ Word Rain</h2>
@@ -27,6 +28,7 @@ function loadWordRain(container, level) {
       <div class="stat"><span class="stat-label">Score</span><span class="stat-value" id="wr-score">0</span></div>
       <div class="stat"><span class="stat-label">Lives</span><span class="stat-value" id="wr-lives">❤️❤️❤️</span></div>
       <div class="stat"><span class="stat-label">Speed</span><span class="stat-value" id="wr-speed">1</span></div>
+      <div class="stat streak-stat"><span class="stat-label">Streak</span><span class="stat-value" id="wr-streak">-</span></div>
     </div>
     <div id="wr-arena" style="position:relative;width:100%;height:320px;background:linear-gradient(180deg,#1d3557,#457b9d);border-radius:16px;overflow:hidden;margin-bottom:16px;">
       <div id="wr-instruction" style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);color:rgba(255,255,255,0.5);font-size:0.9rem;text-align:center;pointer-events:none;">
@@ -70,7 +72,7 @@ function loadWordRain(container, level) {
     el.textContent = word.kr;
     el.dataset.en = word.en.toLowerCase();
     arena.appendChild(el);
-    activeWords.push({ el, y: -40, answer: word.en.toLowerCase() });
+    activeWords.push({ el, y: -40, answer: word.en.toLowerCase(), word });
   }
 
   function gameLoop() {
@@ -83,6 +85,15 @@ function loadWordRain(container, level) {
         w.el.remove();
         activeWords = activeWords.filter(x => x !== w);
         lives--;
+        streak = 0;
+        const streakEl = document.getElementById('wr-streak');
+        if (streakEl) streakEl.textContent = '-';
+        Storage.updateStreak(false);
+        Storage.saveWrongAnswer({
+          primary: w.word.kr,
+          secondary: w.word.en + ' (' + w.word.romanization + ')',
+          gameId: 'word-rain'
+        });
         updateLives();
         if (lives <= 0) return endGame();
       }
@@ -100,15 +111,20 @@ function loadWordRain(container, level) {
     if (!typed) return;
     let hit = false;
     for (const w of [...activeWords]) {
-      if (typed === w.answer || w.answer.includes(typed) && typed.length >= 3) {
+      if (typed === w.answer || (w.answer.includes(typed) && typed.length >= 3)) {
         w.el.style.background = 'rgba(82,183,136,0.8)';
         setTimeout(() => w.el.remove(), 300);
         activeWords = activeWords.filter(x => x !== w);
         score += 15;
+        streak++;
         document.getElementById('wr-score').textContent = score;
-        hit = true;
+        document.getElementById('wr-streak').textContent = '🔥' + streak;
+        Storage.updateStreak(true);
+        Storage.updateDailyChallenge('correct', 1);
+        Storage.updateDailyChallenge('streak', streak);
         speed = Math.min(speed + 0.05, 2.5);
         document.getElementById('wr-speed').textContent = Math.floor(speed / 0.4);
+        hit = true;
         break;
       }
     }
@@ -139,7 +155,6 @@ function loadWordRain(container, level) {
     `;
   }
 
-  // 게임 시작
   wordRainInterval = setInterval(spawnWord, spawnInterval);
   setTimeout(() => { wordRainAnimFrame = requestAnimationFrame(gameLoop); }, 100);
 }

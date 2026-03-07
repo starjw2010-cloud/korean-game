@@ -691,3 +691,284 @@ body {
 .fade-in   { animation: fadeIn 0.35s ease; }
 .shake     { animation: shake 0.4s ease; }
 .pop       { animation: pop 0.3s ease; }
+
+/* ===== 레벨 잠금 ===== */
+.diff-btn.locked {
+  opacity: 0.55;
+  cursor: not-allowed;
+  position: relative;
+}
+.diff-btn.locked::after {
+  content: '🔒';
+  position: absolute;
+  top: 8px;
+  right: 10px;
+  font-size: 1rem;
+}
+.level-unlock-hint {
+  font-size: 0.7rem;
+  color: var(--color-text-light);
+  margin-top: 2px;
+}
+
+/* ===== 헤더 스트릭 ===== */
+.score-item.streak-item .score-value {
+  color: #f4a261;
+}
+
+/* ===== 일일 도전 과제 섹션 ===== */
+.daily-section {
+  margin-bottom: 32px;
+}
+
+.daily-challenges {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 14px;
+}
+
+.challenge-card {
+  background: var(--color-card);
+  border-radius: var(--radius-md);
+  padding: 16px 18px;
+  box-shadow: var(--shadow-sm);
+  border: 2px solid var(--color-border);
+  transition: border-color 0.2s;
+}
+
+.challenge-card.done {
+  border-color: #52b788;
+  background: linear-gradient(135deg, #d8f3dc, #f8fff9);
+}
+
+.challenge-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.challenge-icon {
+  font-size: 1.4rem;
+}
+
+.challenge-label {
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: var(--color-text);
+  flex: 1;
+}
+
+.challenge-check {
+  font-size: 1.1rem;
+}
+
+.challenge-progress-bar {
+  height: 8px;
+  background: var(--color-border);
+  border-radius: 99px;
+  overflow: hidden;
+  margin-bottom: 6px;
+}
+
+.challenge-progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #52b788, #40916c);
+  border-radius: 99px;
+  transition: width 0.4s ease;
+}
+
+.challenge-progress-fill.done {
+  background: linear-gradient(90deg, #52b788, #1b4332);
+}
+
+.challenge-count {
+  font-size: 0.75rem;
+  color: var(--color-text-light);
+  text-align: right;
+}
+
+/* ===== 진행 그래프 + 오답 노트 ===== */
+.stats-section {
+  margin-bottom: 32px;
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+@media (max-width: 640px) {
+  .stats-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.stat-panel {
+  background: var(--color-card);
+  border-radius: var(--radius-md);
+  padding: 20px;
+  box-shadow: var(--shadow-sm);
+  border: 2px solid var(--color-border);
+}
+
+.stat-panel-title {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--color-text);
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* 점수 그래프 */
+.score-graph {
+  display: flex;
+  align-items: flex-end;
+  gap: 6px;
+  height: 100px;
+  padding-bottom: 4px;
+}
+
+.score-bar-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  flex: 1;
+}
+
+.score-bar {
+  width: 100%;
+  border-radius: 4px 4px 0 0;
+  min-height: 4px;
+  transition: height 0.4s ease;
+  cursor: default;
+  position: relative;
+}
+
+.score-bar:hover::after {
+  content: attr(data-label);
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #1d3557;
+  color: white;
+  font-size: 0.7rem;
+  padding: 3px 7px;
+  border-radius: 4px;
+  white-space: nowrap;
+  margin-bottom: 4px;
+}
+
+.score-bar-label {
+  font-size: 0.6rem;
+  color: var(--color-text-light);
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+}
+
+.graph-empty {
+  color: var(--color-text-light);
+  font-size: 0.85rem;
+  text-align: center;
+  width: 100%;
+  padding: 20px 0;
+}
+
+/* 오답 노트 */
+.wrong-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+.wrong-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 12px;
+  background: #fff5f5;
+  border: 1px solid #ffd6d9;
+  border-radius: var(--radius-sm);
+  font-size: 0.85rem;
+  gap: 8px;
+}
+
+.wrong-item-primary {
+  font-weight: 700;
+  color: var(--color-text);
+}
+
+.wrong-item-secondary {
+  color: var(--color-text-light);
+  font-size: 0.8rem;
+}
+
+.wrong-item-badge {
+  background: #e63946;
+  color: white;
+  font-size: 0.65rem;
+  font-weight: 700;
+  padding: 2px 6px;
+  border-radius: 99px;
+  white-space: nowrap;
+}
+
+.wrong-empty {
+  color: var(--color-text-light);
+  font-size: 0.85rem;
+  text-align: center;
+  padding: 20px 0;
+}
+
+/* ===== 게임 내 힌트 버튼 ===== */
+.hint-btn {
+  padding: 6px 14px;
+  background: linear-gradient(135deg, #ffd166, #f4a261);
+  color: white;
+  border: none;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+
+.hint-btn:hover {
+  transform: scale(1.05);
+  box-shadow: 0 2px 8px rgba(244,162,97,0.4);
+}
+
+.hint-btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.hint-box {
+  background: linear-gradient(135deg, #fff9eb, #ffefc0);
+  border: 2px solid #ffd166;
+  border-radius: var(--radius-sm);
+  padding: 10px 14px;
+  font-size: 0.88rem;
+  color: #7b5800;
+  font-weight: 600;
+  margin-top: 10px;
+  text-align: center;
+  animation: fadeIn 0.3s ease;
+}
+
+/* ===== 게임 내 스트릭 표시 ===== */
+.streak-stat .stat-value {
+  color: #f4a261;
+}

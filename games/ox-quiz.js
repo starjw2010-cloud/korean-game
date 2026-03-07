@@ -8,19 +8,24 @@ function loadOxQuiz(container, level) {
   let current = 0;
   let answered = false;
   let streak = 0;
+  let hintsLeft = 3;
+  let hintUsed = false;
 
   function render() {
     if (current >= questions.length) return showResult();
     const q = questions[current];
     answered = false;
+    hintUsed = false;
 
     container.innerHTML = `
       <h2 class="game-title">❓ OX Quiz</h2>
       <div class="game-score-bar">
         <div class="stat"><span class="stat-label">Score</span><span class="stat-value" id="ox-score">${score}</span></div>
         <div class="stat"><span class="stat-label">Question</span><span class="stat-value">${current + 1} / ${questions.length}</span></div>
-        <div class="stat"><span class="stat-label">Streak</span><span class="stat-value" id="ox-streak">${streak > 0 ? '🔥'.repeat(Math.min(streak,3)) : '-'}</span></div>
+        <div class="stat streak-stat"><span class="stat-label">Streak</span><span class="stat-value" id="ox-streak">${streak > 0 ? '🔥'.repeat(Math.min(streak,3)) : '-'}</span></div>
+        <button class="hint-btn" id="ox-hint" ${hintsLeft <= 0 ? 'disabled' : ''} onclick="oxUseHint()">💡 힌트 (${hintsLeft})</button>
       </div>
+      <div id="ox-hint-box"></div>
 
       <div class="fade-in" style="background:white;border-radius:20px;padding:40px 28px;text-align:center;box-shadow:0 4px 20px rgba(0,0,0,0.10);margin-bottom:28px;min-height:160px;display:flex;align-items:center;justify-content:center;">
         <p style="font-size:clamp(1rem,3vw,1.3rem);font-weight:600;color:#1d3557;line-height:1.6;">${q.question}</p>
@@ -44,6 +49,21 @@ function loadOxQuiz(container, level) {
     `;
   }
 
+  window.oxUseHint = function() {
+    if (hintsLeft <= 0 || hintUsed) return;
+    hintUsed = true;
+    hintsLeft--;
+    score = Math.max(0, score - 5);
+    document.getElementById('ox-score').textContent = score;
+    document.getElementById('ox-hint').textContent = `💡 힌트 (${hintsLeft})`;
+    document.getElementById('ox-hint').disabled = hintsLeft <= 0;
+    const q = questions[current];
+    // 설명의 첫 5단어를 힌트로 보여줌
+    const clue = q.explanation.split(' ').slice(0, 5).join(' ') + '...';
+    document.getElementById('ox-hint-box').innerHTML =
+      `<div class="hint-box">힌트: ${clue}</div>`;
+  };
+
   window.oxAnswer = function(btn, chosen, correct) {
     if (answered) return;
     answered = true;
@@ -55,14 +75,23 @@ function loadOxQuiz(container, level) {
       btn.style.transform = 'scale(1.05)';
       btn.style.boxShadow = '0 0 0 4px #52b788';
       streak++;
-      const bonus = streak >= 3 ? 20 : 10;
+      const bonus = hintUsed ? (streak >= 3 ? 10 : 5) : (streak >= 3 ? 20 : 10);
       score += bonus;
       document.getElementById('ox-score').textContent = score;
       document.getElementById('ox-streak').textContent = '🔥'.repeat(Math.min(streak, 3));
+      Storage.updateStreak(true);
+      Storage.updateDailyChallenge('correct', 1);
+      Storage.updateDailyChallenge('streak', streak);
     } else {
       btn.style.opacity = '0.4';
       streak = 0;
       document.getElementById('ox-streak').textContent = '-';
+      Storage.updateStreak(false);
+      Storage.saveWrongAnswer({
+        primary: questions[current].question.slice(0, 60) + (questions[current].question.length > 60 ? '...' : ''),
+        secondary: (correct ? '정답: ⭕ TRUE' : '정답: ❌ FALSE'),
+        gameId: 'ox-quiz'
+      });
     }
 
     const fb = document.getElementById('ox-feedback');

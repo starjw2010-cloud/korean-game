@@ -5,7 +5,7 @@
 function loadKoreanTyping(container, level) {
   const allWords = GameData.words[level];
   const words = shuffle([...allWords]).slice(0, 15);
-  let current = 0, score = 0, correct = 0;
+  let current = 0, score = 0, correct = 0, streak = 0;
 
   function render() {
     if (current >= words.length) return showResult();
@@ -14,6 +14,7 @@ function loadKoreanTyping(container, level) {
       <div style="text-align:center; padding:20px;">
         <div style="margin-bottom:8px; color:#888; font-size:14px;">
           ${current + 1} / ${words.length} &nbsp;|&nbsp; Score: <b>${score}</b>
+          &nbsp;|&nbsp; <span style="color:#f4a261;font-weight:700;">${streak > 0 ? '🔥 ' + streak + ' streak' : ''}</span>
         </div>
         <div style="font-size:14px; color:#555; margin-bottom:6px;">Type the Korean word for:</div>
         <div style="font-size:36px; font-weight:bold; margin-bottom:8px; color:#1a3a5c;">${word.en}</div>
@@ -41,10 +42,20 @@ function loadKoreanTyping(container, level) {
         val === word.romanization.toLowerCase() ||
         (word.romanization.toLowerCase().startsWith(val) && val.length >= 3);
       if (isCorrect) {
-        score += 10; correct++;
+        score += 10; correct++; streak++;
         fb.innerHTML = `<span style="color:green">✅ 정답! ${word.kr} (${word.romanization})</span>`;
+        Storage.updateStreak(true);
+        Storage.updateDailyChallenge('correct', 1);
+        Storage.updateDailyChallenge('streak', streak);
       } else {
         fb.innerHTML = `<span style="color:red">❌ 오답! 정답: ${word.kr} (${word.romanization})</span>`;
+        streak = 0;
+        Storage.updateStreak(false);
+        Storage.saveWrongAnswer({
+          primary: word.en,
+          secondary: word.kr + ' (' + word.romanization + ')',
+          gameId: 'korean-typing'
+        });
       }
       input.disabled = true;
       btn.disabled = true;
@@ -56,19 +67,21 @@ function loadKoreanTyping(container, level) {
   }
 
   function showResult() {
+    const isNew = onGameEnd('korean-typing', score);
     container.innerHTML = `
       <div style="text-align:center; padding:40px 20px;">
         <div style="font-size:48px;">⌨️</div>
         <h2>게임 종료!</h2>
+        ${isNew ? '<p style="color:#f4a261;font-weight:700;font-size:1.1rem;">🏆 New Best Score!</p>' : ''}
         <p style="font-size:22px;">Score: <b>${score}</b></p>
         <p style="color:#555;">${correct} / ${words.length} correct</p>
-        <button onclick="startGame('korean-typing')"
-          style="margin-top:16px; padding:12px 32px; background:#e63946; color:#fff; border:none; border-radius:8px; font-size:16px; cursor:pointer;">
-          Play Again
-        </button>
+        <div class="result-buttons">
+          <button class="btn-primary" onclick="loadKoreanTyping(document.getElementById('game-container'), currentLevel)">
+            Play Again
+          </button>
+          <button class="btn-secondary" onclick="goHome()">Home</button>
+        </div>
       </div>`;
-    if (typeof saveScore === 'function') saveScore('korean-typing', score);
-    onGameEnd('korean-typing', score);
   }
 
   render();

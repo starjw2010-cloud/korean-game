@@ -10,7 +10,6 @@ function loadMatching(container, level) {
   let lockBoard = false;
   let moves = 0;
 
-  // 한글 카드 + 영어 카드 쌍으로 만들기
   const cards = shuffle([
     ...words.map((w, i) => ({ id: i, type: 'kr', text: w.kr })),
     ...words.map((w, i) => ({ id: i, type: 'en', text: w.en }))
@@ -62,7 +61,6 @@ function loadMatching(container, level) {
       lockBoard = true;
 
       if (flipped[0].id === flipped[1].id) {
-        // 짝 맞음!
         flipped.forEach(f => {
           const el = document.getElementById(`mt-card-${f.idx}`);
           el.dataset.matched = 'true';
@@ -75,9 +73,9 @@ function loadMatching(container, level) {
         document.getElementById('mt-pairs').textContent = `${matched} / ${words.length}`;
         flipped = [];
         lockBoard = false;
+        Storage.updateDailyChallenge('correct', 1);
         if (matched === words.length) setTimeout(showResult, 600);
       } else {
-        // 짝 안 맞음 - 다시 뒤집기
         setTimeout(() => {
           flipped.forEach(f => { document.getElementById(`mt-inner-${f.idx}`).style.transform = ''; });
           flipped = [];

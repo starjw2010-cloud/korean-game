@@ -57,6 +57,11 @@
           <span class="score-label">Total Visitors</span>
           <span class="score-value" id="visitor-count">...</span>
         </div>
+        <div class="score-item streak-item">
+          <span class="score-icon">🔥</span>
+          <span class="score-label">Best Streak</span>
+          <span class="score-value" id="best-streak">0</span>
+        </div>
       </div>
     </div>
   </header>
@@ -68,6 +73,14 @@
     <section class="welcome-section">
       <h1 class="welcome-title">Welcome to Korean Learning Arcade!</h1>
       <p class="welcome-sub">7 fun mini-games to master Korean. Pick your level and start playing!</p>
+    </section>
+
+    <!-- 일일 도전 과제 -->
+    <section class="daily-section">
+      <h2 class="section-title">📅 오늘의 도전 과제</h2>
+      <div class="daily-challenges" id="daily-challenges">
+        <!-- JS에서 렌더링 -->
+      </div>
     </section>
 
     <!-- 난이도 선택 -->
@@ -89,6 +102,21 @@
           <span class="diff-name">Advanced</span>
           <span class="diff-desc">Grammar & expressions</span>
         </button>
+      </div>
+    </section>
+
+    <!-- 진행 그래프 + 오답 노트 -->
+    <section class="stats-section">
+      <h2 class="section-title">📊 학습 현황</h2>
+      <div class="stats-grid">
+        <div class="stat-panel">
+          <div class="stat-panel-title">📈 최근 점수 기록</div>
+          <div id="score-graph"><!-- JS에서 렌더링 --></div>
+        </div>
+        <div class="stat-panel">
+          <div class="stat-panel-title">📝 오답 노트 (최근 10개)</div>
+          <div id="wrong-answers-list"><!-- JS에서 렌더링 --></div>
+        </div>
       </div>
     </section>
 

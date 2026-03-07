@@ -7,19 +7,27 @@ function loadWordCards(container, level) {
   let score = 0;
   let current = 0;
   let answered = false;
+  let streak = 0;
+  let hintsLeft = 3;
+  let hintUsed = false;
+  let correctCount = 0;
 
   function render() {
     if (current >= words.length) return showResult();
     const word = words[current];
     const options = makeOptions(word, GameData.words[level], 'en');
     answered = false;
+    hintUsed = false;
 
     container.innerHTML = `
       <h2 class="game-title">🃏 Word Flip Cards</h2>
       <div class="game-score-bar">
         <div class="stat"><span class="stat-label">Score</span><span class="stat-value" id="wc-score">${score}</span></div>
         <div class="stat"><span class="stat-label">Question</span><span class="stat-value">${current + 1} / ${words.length}</span></div>
+        <div class="stat streak-stat"><span class="stat-label">Streak</span><span class="stat-value" id="wc-streak">${streak > 0 ? '🔥' + streak : '-'}</span></div>
+        <button class="hint-btn" id="wc-hint" ${hintsLeft <= 0 ? 'disabled' : ''} onclick="wcUseHint()">💡 힌트 (${hintsLeft})</button>
       </div>
+      <div id="wc-hint-box"></div>
       <div class="card-display fade-in" style="background:white;border-radius:20px;padding:48px 24px;text-align:center;box-shadow:0 4px 20px rgba(0,0,0,0.12);margin-bottom:24px;">
         <p style="font-size:0.85rem;color:#888;margin-bottom:8px;">What does this mean?</p>
         <div style="font-size:3.5rem;font-weight:900;color:#1d3557;letter-spacing:0.05em;">${word.kr}</div>
@@ -30,24 +38,50 @@ function loadWordCards(container, level) {
       </div>
     `;
     container.querySelectorAll('.choice-btn').forEach(b =>
-      b.addEventListener('click', () => window.wcAnswer(b, b.dataset.chosen, b.dataset.correct))
+      b.addEventListener('click', () => window.wcAnswer(b, b.dataset.chosen, b.dataset.correct, word))
     );
   }
 
-  window.wcAnswer = function(btn, chosen, correct) {
+  window.wcUseHint = function() {
+    if (hintsLeft <= 0 || hintUsed) return;
+    hintUsed = true;
+    hintsLeft--;
+    score = Math.max(0, score - 5);
+    document.getElementById('wc-score').textContent = score;
+    document.getElementById('wc-hint').textContent = `💡 힌트 (${hintsLeft})`;
+    document.getElementById('wc-hint').disabled = hintsLeft <= 0;
+    const word = words[current];
+    document.getElementById('wc-hint-box').innerHTML =
+      `<div class="hint-box">첫 글자: <b>${word.en[0].toUpperCase()}</b> · 카테고리: ${word.category || '?'}</div>`;
+  };
+
+  window.wcAnswer = function(btn, chosen, correct, word) {
     if (answered) return;
     answered = true;
     const allBtns = container.querySelectorAll('.choice-btn');
     allBtns.forEach(b => b.disabled = true);
     if (chosen === correct) {
-      btn.classList.add('correct');
-      score += 10;
+      btn.classList.add('correct', 'pop');
+      const bonus = hintUsed ? 5 : 10;
+      score += bonus;
+      streak++;
+      correctCount++;
       document.getElementById('wc-score').textContent = score;
-      btn.classList.add('pop');
+      document.getElementById('wc-streak').textContent = '🔥' + streak;
+      Storage.updateStreak(true);
+      Storage.updateDailyChallenge('correct', 1);
+      Storage.updateDailyChallenge('streak', streak);
     } else {
-      btn.classList.add('wrong');
-      btn.classList.add('shake');
+      btn.classList.add('wrong', 'shake');
       allBtns.forEach(b => { if (b.textContent === correct) b.classList.add('correct'); });
+      streak = 0;
+      document.getElementById('wc-streak').textContent = '-';
+      Storage.updateStreak(false);
+      Storage.saveWrongAnswer({
+        primary: word.kr,
+        secondary: word.en + ' (' + word.romanization + ')',
+        gameId: 'word-cards'
+      });
     }
     setTimeout(() => { current++; render(); }, 1200);
   };
@@ -60,7 +94,7 @@ function loadWordCards(container, level) {
         <h2 class="result-title">${score >= 80 ? 'Excellent!' : score >= 50 ? 'Good job!' : 'Keep studying!'}</h2>
         ${isNew ? '<p style="color:#f4a261;font-weight:700;font-size:1.1rem;">🏆 New Best Score!</p>' : ''}
         <div class="result-score">${score} pts</div>
-        <p style="color:#888;">You got ${score / 10} out of ${words.length} correct!</p>
+        <p style="color:#888;">You got ${correctCount} out of ${words.length} correct!</p>
         <div class="result-buttons">
           <button class="btn-primary" onclick="loadWordCards(document.getElementById('game-container'), currentLevel)">Play Again</button>
           <button class="btn-secondary" onclick="goHome()">Home</button>
