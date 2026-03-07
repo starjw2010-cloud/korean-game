@@ -25,9 +25,11 @@ function loadFillBlank(container, level) {
         <div class="stat"><span class="stat-label">Score</span><span class="stat-value" id="fb-score">${score}</span></div>
         <div class="stat"><span class="stat-label">Question</span><span class="stat-value">${current + 1} / ${questions.length}</span></div>
         <div class="stat streak-stat"><span class="stat-label">Streak</span><span class="stat-value" id="fb-streak">${streak > 0 ? '🔥' + streak : '-'}</span></div>
-        <button class="hint-btn" id="fb-hint" ${hintsLeft <= 0 ? 'disabled' : ''} onclick="fbUseHint()">💡 힌트 (${hintsLeft})</button>
       </div>
-      <div id="fb-hint-box"></div>
+      <div class="hint-area">
+        <button class="hint-btn" id="fb-hint" ${hintsLeft <= 0 ? 'disabled' : ''} onclick="fbUseHint()">💡 힌트 (${hintsLeft})</button>
+        <div id="fb-hint-box"></div>
+      </div>
       <div class="fade-in" style="background:white;border-radius:16px;padding:32px 24px;margin-bottom:24px;box-shadow:0 4px 16px rgba(0,0,0,0.08);">
         <p style="font-size:0.85rem;color:#888;margin-bottom:10px;">Translation: ${q.sentence_en}</p>
         <div style="font-size:1.5rem;font-weight:700;color:#1d3557;line-height:1.8;text-align:center;">

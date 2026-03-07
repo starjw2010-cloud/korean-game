@@ -30,6 +30,10 @@ function loadWordRain(container, level) {
       <div class="stat"><span class="stat-label">Speed</span><span class="stat-value" id="wr-speed">1</span></div>
       <div class="stat streak-stat"><span class="stat-label">Streak</span><span class="stat-value" id="wr-streak">-</span></div>
     </div>
+    <div class="hint-area">
+      <button class="hint-btn" id="wr-hint" onclick="wrUseHint()">💡 힌트 (3)</button>
+      <div id="wr-hint-box"></div>
+    </div>
     <div id="wr-arena" style="position:relative;width:100%;height:320px;background:linear-gradient(180deg,#1d3557,#457b9d);border-radius:16px;overflow:hidden;margin-bottom:16px;">
       <div id="wr-instruction" style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);color:rgba(255,255,255,0.5);font-size:0.9rem;text-align:center;pointer-events:none;">
         Type the <b>English meaning</b> of the falling Korean word!
@@ -104,6 +108,20 @@ function loadWordRain(container, level) {
   function updateLives() {
     document.getElementById('wr-lives').textContent = '❤️'.repeat(lives) + '🖤'.repeat(3 - lives);
   }
+
+  let wrHintsLeft = 3;
+  window.wrUseHint = function() {
+    if (wrHintsLeft <= 0 || activeWords.length === 0) return;
+    wrHintsLeft--;
+    const btn = document.getElementById('wr-hint');
+    if (btn) { btn.textContent = `💡 힌트 (${wrHintsLeft})`; btn.disabled = wrHintsLeft <= 0; }
+    // 화면에서 가장 아래에 있는 단어(가장 급한 것)의 발음 힌트 표시
+    const closest = [...activeWords].sort((a, b) => b.y - a.y)[0];
+    if (closest) {
+      const hintBox = document.getElementById('wr-hint-box');
+      if (hintBox) hintBox.innerHTML = `<div class="hint-box">힌트: <b>${closest.word.romanization}</b></div>`;
+    }
+  };
 
   window.wrSubmit = function() {
     if (gameOver) return;

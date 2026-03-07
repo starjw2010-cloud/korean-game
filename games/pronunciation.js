@@ -25,9 +25,11 @@ function loadPronunciation(container, level) {
         <div class="stat"><span class="stat-label">Score</span><span class="stat-value" id="pr-score">${score}</span></div>
         <div class="stat"><span class="stat-label">Question</span><span class="stat-value">${current + 1} / ${words.length}</span></div>
         <div class="stat streak-stat"><span class="stat-label">Streak</span><span class="stat-value" id="pr-streak">${streak > 0 ? '🔥' + streak : '-'}</span></div>
-        <button class="hint-btn" id="pr-hint" ${hintsLeft <= 0 ? 'disabled' : ''} onclick="prUseHint()">💡 힌트 (${hintsLeft})</button>
       </div>
-      <div id="pr-hint-box"></div>
+      <div class="hint-area">
+        <button class="hint-btn" id="pr-hint" ${hintsLeft <= 0 ? 'disabled' : ''} onclick="prUseHint()">💡 힌트 (${hintsLeft})</button>
+        <div id="pr-hint-box"></div>
+      </div>
       <div class="fade-in" style="background:white;border-radius:20px;padding:48px 24px;text-align:center;box-shadow:0 4px 20px rgba(0,0,0,0.12);margin-bottom:24px;">
         <p style="font-size:0.85rem;color:#888;margin-bottom:8px;">How do you pronounce this?</p>
         <div style="font-size:3.8rem;font-weight:900;color:#1d3557;">${word.kr}</div>

@@ -25,9 +25,11 @@ function loadWordCards(container, level) {
         <div class="stat"><span class="stat-label">Score</span><span class="stat-value" id="wc-score">${score}</span></div>
         <div class="stat"><span class="stat-label">Question</span><span class="stat-value">${current + 1} / ${words.length}</span></div>
         <div class="stat streak-stat"><span class="stat-label">Streak</span><span class="stat-value" id="wc-streak">${streak > 0 ? '🔥' + streak : '-'}</span></div>
-        <button class="hint-btn" id="wc-hint" ${hintsLeft <= 0 ? 'disabled' : ''} onclick="wcUseHint()">💡 힌트 (${hintsLeft})</button>
       </div>
-      <div id="wc-hint-box"></div>
+      <div class="hint-area">
+        <button class="hint-btn" id="wc-hint" ${hintsLeft <= 0 ? 'disabled' : ''} onclick="wcUseHint()">💡 힌트 (${hintsLeft})</button>
+        <div id="wc-hint-box"></div>
+      </div>
       <div class="card-display fade-in" style="background:white;border-radius:20px;padding:48px 24px;text-align:center;box-shadow:0 4px 20px rgba(0,0,0,0.12);margin-bottom:24px;">
         <p style="font-size:0.85rem;color:#888;margin-bottom:8px;">What does this mean?</p>
         <div style="font-size:3.5rem;font-weight:900;color:#1d3557;letter-spacing:0.05em;">${word.kr}</div>

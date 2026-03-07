@@ -9,6 +9,7 @@ function loadMatching(container, level) {
   let matched = 0;
   let lockBoard = false;
   let moves = 0;
+  let mtHintsLeft = 3;
 
   const cards = shuffle([
     ...words.map((w, i) => ({ id: i, type: 'kr', text: w.kr })),
@@ -22,6 +23,10 @@ function loadMatching(container, level) {
         <div class="stat"><span class="stat-label">Score</span><span class="stat-value" id="mt-score">${score}</span></div>
         <div class="stat"><span class="stat-label">Moves</span><span class="stat-value" id="mt-moves">${moves}</span></div>
         <div class="stat"><span class="stat-label">Pairs</span><span class="stat-value" id="mt-pairs">${matched} / ${words.length}</span></div>
+      </div>
+      <div class="hint-area" style="margin-bottom:12px;">
+        <button class="hint-btn" id="mt-hint" onclick="mtUseHint()">💡 힌트 (${mtHintsLeft})</button>
+        <div id="mt-hint-box"></div>
       </div>
       <p style="text-align:center;color:#888;font-size:0.85rem;margin-bottom:16px;">
         Click cards to flip them. Match Korean words with their English meanings!
@@ -45,6 +50,19 @@ function loadMatching(container, level) {
       </div>
     `;
   }
+
+  window.mtUseHint = function() {
+    if (mtHintsLeft <= 0) return;
+    mtHintsLeft--;
+    const btn = document.getElementById('mt-hint');
+    if (btn) { btn.textContent = `💡 힌트 (${mtHintsLeft})`; btn.disabled = mtHintsLeft <= 0; }
+    // Find an unmatched word and reveal its pair info
+    const unmatched = words.find((w, i) => !document.querySelector(`[data-matched][data-id="${i}"]`));
+    if (unmatched) {
+      const hintBox = document.getElementById('mt-hint-box');
+      if (hintBox) hintBox.innerHTML = `<div class="hint-box">힌트: <b>${unmatched.kr}</b> = <b>${unmatched.en}</b></div>`;
+    }
+  };
 
   window.mtFlip = function(idx) {
     if (lockBoard) return;

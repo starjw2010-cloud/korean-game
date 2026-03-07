@@ -23,9 +23,11 @@ function loadOxQuiz(container, level) {
         <div class="stat"><span class="stat-label">Score</span><span class="stat-value" id="ox-score">${score}</span></div>
         <div class="stat"><span class="stat-label">Question</span><span class="stat-value">${current + 1} / ${questions.length}</span></div>
         <div class="stat streak-stat"><span class="stat-label">Streak</span><span class="stat-value" id="ox-streak">${streak > 0 ? '🔥'.repeat(Math.min(streak,3)) : '-'}</span></div>
-        <button class="hint-btn" id="ox-hint" ${hintsLeft <= 0 ? 'disabled' : ''} onclick="oxUseHint()">💡 힌트 (${hintsLeft})</button>
       </div>
-      <div id="ox-hint-box"></div>
+      <div class="hint-area">
+        <button class="hint-btn" id="ox-hint" ${hintsLeft <= 0 ? 'disabled' : ''} onclick="oxUseHint()">💡 힌트 (${hintsLeft})</button>
+        <div id="ox-hint-box"></div>
+      </div>
 
       <div class="fade-in" style="background:white;border-radius:20px;padding:40px 28px;text-align:center;box-shadow:0 4px 20px rgba(0,0,0,0.10);margin-bottom:28px;min-height:160px;display:flex;align-items:center;justify-content:center;">
         <p style="font-size:clamp(1rem,3vw,1.3rem);font-weight:600;color:#1d3557;line-height:1.6;">${q.question}</p>

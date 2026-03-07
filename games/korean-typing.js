@@ -18,8 +18,12 @@ function loadKoreanTyping(container, level) {
         </div>
         <div style="font-size:14px; color:#555; margin-bottom:6px;">Type the Korean word for:</div>
         <div style="font-size:36px; font-weight:bold; margin-bottom:8px; color:#1a3a5c;">${word.en}</div>
-        <div style="font-size:14px; color:#888; margin-bottom:20px;">
-          Hint: starts with <b>${word.kr[0]}</b> (${word.romanization.split(' ')[0]})
+        <div style="font-size:14px; color:#888; margin-bottom:12px;">
+          Hint: starts with <b>${word.kr[0]}</b>
+        </div>
+        <div class="hint-area" style="justify-content:center; margin-bottom:12px;">
+          <button class="hint-btn" id="kt-hint" onclick="ktUseHint()">💡 힌트 (발음 보기)</button>
+          <div id="kt-hint-box"></div>
         </div>
         <input id="typing-input" type="text" placeholder="Type in Korean or romanization..."
           style="width:280px; padding:12px; font-size:18px; border:2px solid #ddd; border-radius:8px; text-align:center; outline:none;"
@@ -30,6 +34,16 @@ function loadKoreanTyping(container, level) {
         </button>
         <div id="feedback" style="margin-top:16px; font-size:18px; min-height:28px;"></div>
       </div>`;
+
+    let ktHintsLeft = 3;
+    window.ktUseHint = function() {
+      if (ktHintsLeft <= 0) return;
+      ktHintsLeft--;
+      const hintBtn = document.getElementById('kt-hint');
+      if (hintBtn) { hintBtn.textContent = `💡 힌트 (${ktHintsLeft})`; hintBtn.disabled = ktHintsLeft <= 0; }
+      const hintBox = document.getElementById('kt-hint-box');
+      if (hintBox) hintBox.innerHTML = `<div class="hint-box">발음: <b>${word.romanization}</b></div>`;
+    };
 
     const input = container.querySelector('#typing-input');
     const btn = container.querySelector('#submit-btn');

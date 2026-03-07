@@ -930,6 +930,15 @@ body {
   padding: 20px 0;
 }
 
+/* ===== 힌트 영역 (score bar 아래 독립 배치) ===== */
+.hint-area {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 12px;
+  flex-wrap: wrap;
+}
+
 /* ===== 게임 내 힌트 버튼 ===== */
 .hint-btn {
   padding: 6px 14px;

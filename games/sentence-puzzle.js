@@ -34,9 +34,11 @@ function loadSentencePuzzle(container, level) {
         <div class="stat"><span class="stat-label">Score</span><span class="stat-value" id="sp-score">${score}</span></div>
         <div class="stat"><span class="stat-label">Puzzle</span><span class="stat-value">${current + 1} / ${puzzles.length}</span></div>
         <div class="stat streak-stat"><span class="stat-label">Streak</span><span class="stat-value" id="sp-streak">${streak > 0 ? '🔥' + streak : '-'}</span></div>
-        <button class="hint-btn" id="sp-hint" onclick="spUseHint()">💡 힌트</button>
       </div>
-      <div id="sp-hint-box"></div>
+      <div class="hint-area">
+        <button class="hint-btn" id="sp-hint" onclick="spUseHint()">💡 힌트</button>
+        <div id="sp-hint-box"></div>
+      </div>
       <div class="fade-in" style="background:white;border-radius:16px;padding:24px;margin-bottom:16px;box-shadow:0 4px 16px rgba(0,0,0,0.08);">
         <p style="font-size:0.85rem;color:#888;margin-bottom:6px;">Arrange the words to say:</p>
         <p style="font-size:1.1rem;font-weight:700;color:#1d3557;">"${puzzle.translation}"</p>
