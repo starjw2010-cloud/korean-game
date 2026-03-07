@@ -30,11 +30,11 @@ window.addEventListener('DOMContentLoaded', () => {
   renderStatsPanel();
 
   // 방문자 카운터
-  fetch('https://api.countapi.xyz/hit/koreanlearningarcade/visits')
+  fetch('https://api.counterapi.dev/v1/koreanlearningarcade/visits/up')
     .then(r => r.json())
     .then(data => {
       const el = document.getElementById('visitor-count');
-      if (el) el.textContent = data.value.toLocaleString();
+      if (el) el.textContent = (data.count || data.value || 0).toLocaleString();
     })
     .catch(() => {
       const el = document.getElementById('visitor-count');
