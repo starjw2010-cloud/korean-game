@@ -16,9 +16,9 @@ function loadKoreanTyping(container, level) {
           ${current + 1} / ${words.length} &nbsp;|&nbsp; Score: <b>${score}</b>
         </div>
         <div style="font-size:14px; color:#555; margin-bottom:6px;">Type the Korean word for:</div>
-        <div style="font-size:36px; font-weight:bold; margin-bottom:8px; color:#1a3a5c;">${word.english}</div>
+        <div style="font-size:36px; font-weight:bold; margin-bottom:8px; color:#1a3a5c;">${word.en}</div>
         <div style="font-size:14px; color:#888; margin-bottom:20px;">
-          Hint: starts with <b>${word.korean[0]}</b> (${word.romanization.split(' ')[0]})
+          Hint: starts with <b>${word.kr[0]}</b> (${word.romanization.split(' ')[0]})
         </div>
         <input id="typing-input" type="text" placeholder="Type in Korean or romanization..."
           style="width:280px; padding:12px; font-size:18px; border:2px solid #ddd; border-radius:8px; text-align:center; outline:none;"
@@ -37,14 +37,14 @@ function loadKoreanTyping(container, level) {
       const val = input.value.trim().toLowerCase();
       const fb = container.querySelector('#feedback');
       if (!val) return;
-      const isCorrect = val === word.korean ||
+      const isCorrect = val === word.kr ||
         val === word.romanization.toLowerCase() ||
         (word.romanization.toLowerCase().startsWith(val) && val.length >= 3);
       if (isCorrect) {
         score += 10; correct++;
-        fb.innerHTML = `<span style="color:green">✅ 정답! ${word.korean} (${word.romanization})</span>`;
+        fb.innerHTML = `<span style="color:green">✅ 정답! ${word.kr} (${word.romanization})</span>`;
       } else {
-        fb.innerHTML = `<span style="color:red">❌ 오답! 정답: ${word.korean} (${word.romanization})</span>`;
+        fb.innerHTML = `<span style="color:red">❌ 오답! 정답: ${word.kr} (${word.romanization})</span>`;
       }
       input.disabled = true;
       btn.disabled = true;
