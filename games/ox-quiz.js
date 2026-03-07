@@ -49,7 +49,6 @@ function loadOxQuiz(container, level) {
     answered = true;
     const isCorrect = chosen === correct;
 
-    // 두 버튼 모두 비활성화
     btn.parentElement.querySelectorAll('button').forEach(b => b.style.pointerEvents = 'none');
 
     if (isCorrect) {
@@ -66,7 +65,6 @@ function loadOxQuiz(container, level) {
       document.getElementById('ox-streak').textContent = '-';
     }
 
-    // 설명 보여주기
     const fb = document.getElementById('ox-feedback');
     const ex = document.getElementById('ox-explanation');
     fb.style.display = 'block';

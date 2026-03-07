@@ -133,3 +133,4 @@ function confirmReset() {
     alert('Progress has been reset!');
   }
 }
+
