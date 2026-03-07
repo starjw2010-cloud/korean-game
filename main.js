@@ -17,6 +17,18 @@ window.addEventListener('DOMContentLoaded', () => {
   // 총 점수 / 게임 횟수 표시
   updateScoreBoard();
 
+  // 방문자 카운터 (countapi.xyz)
+  fetch('https://api.countapi.xyz/hit/koreanlearningarcade/visits')
+    .then(r => r.json())
+    .then(data => {
+      const el = document.getElementById('visitor-count');
+      if (el) el.textContent = data.value.toLocaleString();
+    })
+    .catch(() => {
+      const el = document.getElementById('visitor-count');
+      if (el) el.textContent = '--';
+    });
+
   // 최고 점수 카드에 표시
   updateBestScoreDisplays();
 
