@@ -1,4 +1,4 @@
-const CACHE = 'korean-game-v2';
+const CACHE = 'korean-game-v3';
 const STATIC_FILES = [
   '/korean-game/',
   '/korean-game/index.html',
