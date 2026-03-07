@@ -196,6 +196,22 @@
           </div>
         </div>
 
+        <!-- 게임 8: 한글 타이핑 -->
+        <div class="game-card" data-game="korean-typing">
+          <div class="game-card-inner">
+            <div class="game-emoji">⌨️</div>
+            <h3 class="game-name">Korean Typing</h3>
+            <p class="game-name-kr">한글 타이핑</p>
+            <p class="game-desc">Type the Korean word or romanization to sharpen your recall!</p>
+            <div class="game-meta">
+              <span class="game-tag">Typing</span>
+              <span class="game-tag">Vocabulary</span>
+            </div>
+            <div class="game-best">Best: <span class="best-score" id="best-korean-typing">--</span></div>
+            <button class="play-btn" onclick="startGame('korean-typing')">PLAY</button>
+          </div>
+        </div>
+
       </div>
     </section>
 
@@ -234,6 +250,7 @@
   <script src="games/sentence-puzzle.js"></script>
   <script src="games/matching.js"></script>
   <script src="games/ox-quiz.js"></script>
+  <script src="games/korean-typing.js"></script>
   <script src="main.js"></script>
   <script>
     if ('serviceWorker' in navigator) {

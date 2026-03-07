@@ -54,7 +54,8 @@ function updateBestScoreDisplays() {
     'word-rain':       'best-word-rain',
     'sentence-puzzle': 'best-sentence-puzzle',
     'matching':        'best-matching',
-    'ox-quiz':         'best-ox-quiz'
+    'ox-quiz':         'best-ox-quiz',
+    'korean-typing':   'best-korean-typing'
   };
   for (const [gameId, elemId] of Object.entries(map)) {
     const el = document.getElementById(elemId);
@@ -93,7 +94,8 @@ function startGame(gameId) {
     'word-rain':       loadWordRain,
     'sentence-puzzle': loadSentencePuzzle,
     'matching':        loadMatching,
-    'ox-quiz':         loadOxQuiz
+    'ox-quiz':         loadOxQuiz,
+    'korean-typing':   loadKoreanTyping
   };
 
   if (gameLoaders[gameId]) {
